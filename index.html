@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Terms Quiz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-image: linear-gradient(to right top, #24294b, #20315c, #1d396d, #1d407f, #204891);
+        }
+        .fade-in-up {
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .bounce-in {
+            animation: bounceIn 0.7s ease-out forwards;
+        }
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            60% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white rounded-xl shadow-2xl p-6 sm:p-8 md:p-10 w-full max-w-2xl text-center transition-all duration-300 ease-in-out relative z-10 bounce-in">
+
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="space-y-6">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-4 sm:mb-6 leading-tight">Welcome to the Business Terms Quiz!</h1>
+            <p class="text-gray-500 mb-6 sm:mb-8 text-sm sm:text-base">Test your knowledge of key professional phrases from our conversation. The quiz will be different every time you play!</p>
+            <button id="start-button" class="bg-indigo-600 text-white font-medium py-3 px-6 rounded-full shadow-lg hover:bg-indigo-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 hover:scale-105">
+                Start Quiz
+            </button>
+        </div>
+
+        <!-- Quiz Container -->
+        <div id="quiz-container" class="hidden space-y-6">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-4 sm:mb-6 leading-tight">Business Terms Quiz</h1>
+
+            <!-- Progress Indicator -->
+            <div id="progress-indicator" class="text-sm text-gray-400 font-medium mb-4"></div>
+
+            <!-- Question Section -->
+            <div id="question-container" class="bg-indigo-50 border-2 border-indigo-200 rounded-lg p-4 sm:p-6 shadow-md fade-in-up">
+                <p id="question-text" class="text-lg sm:text-xl font-medium text-indigo-800 leading-snug">
+                    <span class="font-bold">Question:</span> Loading question...
+                </p>
+            </div>
+            
+            <!-- User Input & Hint Section -->
+            <div class="w-full flex flex-col space-y-4 items-center mt-6">
+                <input type="text" id="user-answer" placeholder="Type your answer here..." class="w-full sm:w-2/3 px-4 py-3 rounded-lg border-2 border-gray-300 focus:outline-none focus:border-indigo-500 transition-colors duration-200">
+                <div id="feedback-message" class="text-sm font-medium transition-opacity duration-300"></div>
+                <button id="hint-button" class="text-gray-500 text-sm font-medium hover:text-indigo-600 transition-colors duration-300 focus:outline-none focus:text-indigo-600">
+                    Need a hint?
+                </button>
+                <div id="hint-container" class="hidden bg-gray-100 border-2 border-gray-300 rounded-lg p-3 w-full sm:w-2/3 text-left transition-all duration-300 ease-in-out">
+                    <p id="hint-text" class="text-gray-600 leading-relaxed text-sm"></p>
+                </div>
+            </div>
+
+            <!-- Answer and Sentence Container -->
+            <div id="answer-container" class="hidden bg-emerald-100 border-2 border-emerald-300 rounded-lg p-4 sm:p-6 shadow-md fade-in-up">
+                <p class="text-lg sm:text-xl font-medium text-emerald-800">
+                    <span class="font-bold">Term:</span> <span id="answer-text"></span>
+                </p>
+            </div>
+
+            <div id="sentence-container" class="hidden bg-gray-100 border-2 border-gray-300 rounded-lg p-4 sm:p-6 text-left shadow-md fade-in-up">
+                <p class="text-gray-600 leading-relaxed">
+                    <span class="font-bold text-gray-800">In practice:</span> <span id="sentence-text"></span>
+                </p>
+            </div>
+
+            <!-- Buttons Section -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mt-6">
+                <button id="reveal-button" class="bg-indigo-600 text-white font-medium py-3 px-6 rounded-full shadow-lg hover:bg-indigo-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 hover:scale-105">
+                    Check Answer
+                </button>
+                <button id="next-button" class="hidden bg-gray-800 text-white font-medium py-3 px-6 rounded-full shadow-lg hover:bg-gray-900 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2 hover:scale-105">
+                    Next Question
+                </button>
+            </div>
+        </div>
+        
+        <!-- Completion Message -->
+        <div id="completion-message" class="hidden text-center mt-8 space-y-4">
+            <h2 class="text-2xl font-bold text-green-700">Quiz Complete!</h2>
+            <p class="text-gray-600">You've reviewed all the terms. Great work!</p>
+            <button id="restart-button" class="bg-indigo-600 text-white font-medium py-3 px-6 rounded-full shadow-lg hover:bg-indigo-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 hover:scale-105">
+                Restart Quiz
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const quizData = [
+                { question: "In a new business pitch, your team is trying to convince a client that your agency's creative work is not only visually appealing but also delivers measurable results. What's the two-word term you would use to describe the effectiveness of the creative output in terms of achieving the client's goals?", answer: "Creative effectiveness", sentence: "We'll run A/B tests on the ad visuals to measure the **creative effectiveness** of each version.", hint: "The effectiveness of your ad campaign." },
+                { question: "In a strategic planning meeting, your team is trying to figure out which marketing activities have the biggest impact on sales. You're using a statistical analysis to measure the influence of everything from TV commercials to social media ads. What's the two-word term for this analysis?", answer: "Marketing mix modeling", sentence: "We're using **marketing mix modeling** to determine if we should allocate more of our budget to digital ads or traditional print media to maximize our ROI.", hint: "It's a way to figure out what's working in your ad campaigns." },
+                { question: "In a pitch, you need to explain to a potential client that your brand's core mission is more than just making a profit. It's about a deeper value, like community empowerment or environmental responsibility. What's the two-word term for this?", answer: "Brand purpose", sentence: "Our new **brand purpose** isn't just to sell clothes; it's to promote sustainable fashion and reduce textile waste.", hint: "The 'why' behind the company's existence." },
+                { question: "Your team has just launched two different versions of a new ad. You want to see which one performs better with your target audience. What's the two-word term for evaluating the impact of the ads on your business goals?", answer: "Creative effectiveness", sentence: "We'll run A/B tests on the ad visuals to measure the **creative effectiveness** of each version.", hint: "A measure of how well your creative output works." },
+                { question: "You're a new company and want to get a sense of what the competition is doing, what their strengths are, and where they are weak. What's the two-word term for this research?", answer: "Market intelligence", sentence: "Based on our latest **market intelligence**, our biggest competitor is launching a new feature next quarter, so we need to accelerate our roadmap.", hint: "Gathering information on your competitors." },
+                { question: "You have a new campaign focused on driving immediate sales through highly targeted ads with a clear ROI metric. This is different from long-term branding efforts. What is this type of marketing called?", answer: "Performance marketing", sentence: "Our **performance marketing** team is focused solely on driving sales through highly targeted digital ads with a clear ROI metric.", hint: "Marketing that is measured based on results." },
+                { question: "Your company is making long-term predictions about consumer behavior and market trends to stay ahead of the curve. You're not just reacting to what's happening now; you're anticipating the future. What's this approach called?", answer: "Strategic foresight", sentence: "Given the rise of Gen Z consumers, our **strategic foresight** suggests we should invest heavily in TikTok and other short-form video platforms.", hint: "Looking ahead to predict future trends." },
+                { question: "Your company is completely changing its business model—for example, shifting from a physical retail store to an e-commerce-only operation. What's the two-word term for this fundamental change?", answer: "Business transformation", sentence: "Our shift from a physical store model to e-commerce represents a complete **business transformation** for the company.", hint: "A complete change in a company's fundamental operations." },
+                { question: "In a kick-off meeting, you're discussing a new product launch. You're outlining your plan to introduce the product to the market, including its positioning, pricing, and distribution. What's this comprehensive plan called?", answer: "Go-to-market strategy", sentence: "Our **go-to-market strategy** for the new product involves an exclusive launch with a major online retailer.", hint: "The plan to introduce a new product." },
+                { question: "Your company decides to team up with another brand to launch a new product that will benefit both of you. What is this collaborative agreement called?", answer: "Strategic partnership", sentence: "We've entered a **strategic partnership** with a fitness app to promote our healthy meal kits to their user base.", hint: "A collaborative agreement between two businesses." },
+                { question: "Your new marketing campaign ensures that a customer's experience is seamless and consistent across all channels—from your website and app to your social media and physical store. What is this approach called?", answer: "Omnichannel approach", sentence: "Our new **omnichannel approach** ensures that a customer can order online, pick up in-store, and get customer support via text message.", hint: "A consistent experience across all platforms." },
+                { question: "Your team is re-designing your app and marketing campaigns based entirely on customer feedback and needs, rather than just what the company wants to sell. What is this core business philosophy called?", answer: "Customer-centricity", sentence: "This whole project reflects our commitment to **customer-centricity**—we're redesigning the entire app based on user feedback.", hint: "Focusing on the customer's needs." },
+                { question: "Your marketing team is deciding where to spend its budget for the next campaign. Instead of guessing, you're using previous campaign data to inform your decisions. What's this process called?", answer: "Data-driven decisions", sentence: "We're not just guessing; our campaign budget allocations are based on **data-driven decisions** from last quarter’s performance.", hint: "Making decisions based on numbers and facts." },
+                { question: "You've just received a report on your website traffic. The report not only shows you the numbers but also tells you why people are leaving the site so you can make specific changes to fix it. What kind of information has the report provided?", answer: "Actionable insights", sentence: "The report gave us the **actionable insights** that customers who use our mobile app are 50% more likely to make a repeat purchase.", hint: "Information that helps you make specific improvements." },
+                { question: "A recent ad campaign generated $100,000 in profit from a $50,000 investment. You're asked to report on how much money the campaign generated for every dollar spent. What's this financial term?", answer: "Return on investment (ROI)", sentence: "The marketing campaign had a 20% **ROI**, meaning for every dollar we spent, we earned $1.20 in profit.", hint: "A financial metric to measure profitability." },
+                { question: "Your team is setting clear, measurable targets for the new quarter, such as 'increase website traffic by 15%.' What are these targets called?", answer: "Key performance indicators (KPIs)", sentence: "Our main **KPIs** for this quarter are website traffic, lead generation, and customer acquisition cost.", hint: "These are your goals for the quarter." },
+                { question: "A customer has made a purchase after seeing your ad on a blog, clicking a social media post, and then finally searching for your brand on Google. What is the process of giving credit to each of those touchpoints called?", answer: "Attribution modeling", sentence: "According to our **attribution modeling**, the first click from a Google ad is the most common touchpoint leading to a sale.", hint: "How to assign credit to different marketing channels." },
+                { question: "Your company is collecting data directly from its customers through its website and loyalty program, rather than buying data from third-party sources. What is this type of data called?", answer: "First-party data", sentence: "We're relying more on **first-party data** from our customer loyalty program to personalize emails instead of third-party cookies.", hint: "Information collected directly from your customers." },
+                { question: "You're using a software program to analyze historical sales data to predict which customers are most likely to unsubscribe from your service in the next three months. What kind of analysis is this?", answer: "Predictive analytics", sentence: "Using **predictive analytics**, we can forecast which customers are likely to churn in the next six months.", hint: "Analyzing data to forecast the future." },
+                { question: "You want to compare your company's performance against industry standards and your competitors to see where you stand. What is this process of comparison called?", answer: "Benchmarking", sentence: "We'll use last year's holiday season sales as a **benchmarking** tool to set our targets for this year's performance.", hint: "Comparing your company's performance to others." },
+                { question: "You're sending unique, personalized emails to thousands of customers at the same time, each one containing product recommendations based on their individual browsing history. What is this called?", answer: "Personalization at scale", sentence: "Our new email tool allows for **personalization at scale**, so every customer gets a unique product recommendation based on their browsing history.", hint: "Making things personal for a lot of people at once." },
+                { question: "In your monthly social media report, you're looking at things like likes, comments, and shares to understand how people are interacting with your content. What are these metrics called?", answer: "Engagement metrics", sentence: "Our **engagement metrics** on social media, like likes and shares, are up by 30% this quarter.", hint: "Ways to measure interaction with your content." },
+                { question: "You've determined that the average customer who signs up for your subscription service stays for two years and spends a total of $500. What is this value called?", answer: "Lifetime value (LTV)", sentence: "We've increased the **lifetime value (LTV)** of a customer by 15% since we launched our subscription service.", hint: "How much a customer is worth to you over a long time." },
+                { question: "Your team is making small changes to a website's landing page, like changing the button color, to see if it makes more visitors click on the 'Buy Now' button. What's this process called?", answer: "Conversion rate optimization (CRO)", sentence: "By changing the button color, we achieved a 5% increase in **conversion rate optimization (CRO)** on our landing page.", hint: "The process of improving your website to get more sales." },
+                { question: "Your team is sifting through and analyzing massive volumes of data from various sources to uncover hidden patterns and insights about your consumers. What is this kind of analysis?", answer: "Big data analysis", sentence: "The **big data analysis** of our consumer base reveals surprising purchasing habits we never knew existed.", hint: "Working with huge sets of data." },
+                { question: "Your media team wants to know how many people saw your new ad campaign across all channels—TV, social media, and digital banners. What are they trying to calculate?", answer: "Audience measurement", sentence: "Our **audience measurement** shows a significant increase in our reach among college students.", hint: "A way to see how many people your ads reached." },
+                { question: "Your company’s various online platforms—website, app, and social media channels—all work together and share data. What is this interconnected system called?", answer: "Digital ecosystem", sentence: "The new app will be the hub of our entire **digital ecosystem**, connecting our website, social media, and in-store experience.", hint: "All of a company's digital platforms working together." },
+                { question: "Your digital ads are being bought and sold automatically in real time through an auction system. What is this technology called?", answer: "Programmatic advertising", sentence: "We're using **programmatic advertising** to automatically bid on ad space and reach our target audience in real-time.", hint: "Automatically buying ads in real-time." },
+                { question: "Your new campaign allows customers to purchase a product directly from an ad on Instagram without ever leaving the app. What is this specific type of e-commerce called?", answer: "Social commerce", sentence: "The new campaign will focus on **social commerce**, allowing customers to buy our products directly from an Instagram post.", hint: "Selling products directly on social media." },
+                { question: "Your content team needs to produce more blog posts and social media updates at a faster pace to keep up with industry trends and stay relevant. What's this concept called?", answer: "Content velocity", sentence: "We need to increase our **content velocity** to keep up with trends and post relevant information more frequently.", hint: "How fast you can create content." },
+                { question: "Your app's interface is confusing and difficult for customers to use. Your team is tasked with making it more intuitive and user-friendly. What is the process of improving how a user interacts with a product called?", answer: "User experience (UX)", sentence: "We need to fix the app's clunky **UX**; customers are complaining it's too difficult to navigate.", hint: "How a user feels when interacting with a product." },
+                { question: "Your startup has very little money for advertising, so you're using unconventional, low-cost strategies like viral campaigns and referral programs to quickly acquire new users. What is this a type of marketing called?", answer: "Growth hacking", sentence: "Our **growth hacking** strategy is simple: offer a referral bonus to get existing users to invite their friends.", hint: "Using clever ways to grow a business quickly and cheaply." },
+                { question: "Your company is implementing a new system that automates email campaigns, manages social media scheduling, and provides in-depth customer analytics all in one place. What's the term for this suite of tools?", answer: "MarTech (Marketing Technology)", sentence: "Our new **MarTech** stack includes tools for email automation, social media scheduling, and customer analytics.", hint: "The set of tools used to manage marketing." },
+                { question: "Your brand is planning to launch a virtual store and host a fashion show in a popular online video game. What's this new frontier of marketing called?", answer: "Metaverse marketing", sentence: "Our brand is exploring **Metaverse marketing** by creating a virtual store in a popular online world.", hint: "Marketing in a virtual world." },
+                { question: "Your company has created an immersive, 360-degree video that allows customers to tour your factory and see how your products are made. What's this type of content called?", answer: "Virtual reality (VR) experiences", sentence: "We created **virtual reality (VR) experiences** that allow customers to tour our factories and see how our products are made.", hint: "Immersive experiences created with technology." },
+                { question: "Your new ad campaign is specifically targeting people who are watching content on streaming services like Hulu and Roku. What is this type of advertising called?", answer: "Connected TV (CTV)", sentence: "Our new ad campaign will run on **Connected TV (CTV)**, reaching audiences who stream content on their smart TVs.", hint: "Advertising on internet-connected TVs." },
+                { question: "You're redesigning your company's website so that it looks and functions perfectly on a smartphone before you worry about the desktop version. What is this development approach called?", answer: "Mobile-first strategy", sentence: "Our new website was built with a **mobile-first strategy**, ensuring it looks great and is easy to use on smartphones.", hint: "Designing for phones before computers." },
+                { question: "Your team is paying social media celebrities to post about your new product and encourage their followers to buy it. What is this marketing tactic called?", answer: "Influencer marketing", sentence: "We're partnering with a few key social media creators for our next **influencer marketing** campaign.", hint: "Working with famous social media people." },
+                { question: "Your new ad technology automatically generates hundreds of ad variations, testing each one for what resonates best with different audiences. What is this form of creative called?", answer: "Algorithmic creative", sentence: "The new software uses **algorithmic creative** to generate thousands of ad variations, testing each one for what resonates best with different audiences.", hint: "Creating ads with the help of a computer program." },
+                { question: "Your team is concerned about the disappearance of third-party tracking cookies, so you're planning a new marketing strategy that relies more on first-party data. What is this shift a response to?", answer: "Cookieless future", sentence: "We need to prepare for the **cookieless future** by shifting our focus to first-party data collection and contextual advertising.", hint: "A time when third-party cookies won't be used." },
+                { question: "Your company is considering using a decentralized digital ledger to track its products from the source to the store, ensuring transparency and authenticity. What's this technology called?", answer: "Blockchain technology", sentence: "Our supply chain team is exploring how **Blockchain technology** can be used to track products from the source to the store shelf, ensuring authenticity.", hint: "A secure digital ledger for transactions." },
+                { question: "As a marketer, you've noticed that consumers are increasingly choosing to buy from brands that stand for something beyond just their products, like human rights or environmental protection. What are these companies called?", answer: "Purpose-led brands", sentence: "Customers are now more likely to buy from **Purpose-led brands** that align with their values on social and environmental issues.", hint: "Companies with a strong set of values." },
+                { question: "Your new ad campaign uses a popular internet meme to connect with a younger audience. This makes the campaign feel current and relatable. What is this quality called?", answer: "Cultural relevance", sentence: "The new ad's use of a popular meme gave it a huge boost in **cultural relevance** and made it a social media hit.", hint: "Being up-to-date with current trends." },
+                { question: "Your company's new policy states that all of your advertising will be honest, transparent, and never use deceptive practices. What is this approach called?", answer: "Ethical marketing", sentence: "We're dedicated to **ethical marketing** and will never use deceptive advertising practices to mislead consumers.", hint: "Honest and transparent marketing." },
+                { question: "Your ad campaign tells a story about how your products are made from recycled materials and how your company is committed to reducing its environmental impact. What is this type of messaging called?", answer: "Sustainability storytelling", sentence: "Our new campaign is all about **sustainability storytelling**, highlighting how our products are made from recycled materials.", hint: "Sharing the story of how your brand is environmentally friendly." },
+                { question: "Your HR and marketing teams are working together to ensure all your company's ads and content reflect a commitment to a diverse and inclusive environment. What's the acronym for this?", answer: "DEI (Diversity, Equity, and Inclusion)", sentence: "Our **DEI** committee is reviewing our ad visuals to ensure we are representing our diverse customer base accurately.", hint: "The acronym for an important company commitment." },
+                { question: "Your company is taking a strong public stance on a controversial issue, like social justice or political policy, to show its values. What is this approach called?", answer: "Brand activism", sentence: "Our bold new campaign supporting voting rights is an act of **brand activism** that our customers truly respect.", hint: "When a brand takes a public stand on an issue." },
+                { question: "You're analyzing social media comments, forum posts, and online reviews to understand how people feel about your new product. What is this analysis of feelings and opinions called?", answer: "Consumer sentiment", sentence: "Based on our analysis of social media comments, **consumer sentiment** towards the new product is overwhelmingly positive.", hint: "Analyzing what people think and feel about a product." },
+                { question: "You're developing a marketing campaign specifically for people who are passionate about a very specific interest, like vintage comic books or vinyl records. What is this marketing approach called?", answer: "Subculture marketing", sentence: "We're not targeting the mainstream; our **subculture marketing** campaign is focused on gamers and sci-fi fans who appreciate niche products.", hint: "Targeting a very specific, niche group of people." },
+                { question: "Your research shows that younger consumers value content that is real and unfiltered, rather than overly produced or polished. What is this preference called?", answer: "Authenticity", sentence: "Customers demand **authenticity** from brands, so our new campaign will feature real employees and unscripted testimonials.", hint: "Being genuine and real." },
+                { question: "Your team is paying close attention to current events, social movements, and new ideas that are shaping public opinion. What are you monitoring?", answer: "Cultural currents", sentence: "By tapping into **cultural currents** like the shift to remote work, we were able to launch a new product line of home office equipment at the perfect time.", hint: "Keeping up with trends and social movements." },
+                { question: "Your ad campaign's message about community and shared values has deeply connected with your target audience, who feel the brand truly understands them. What is this powerful connection called?", answer: "Brand resonance", sentence: "Our campaign's message about community achieved a powerful **brand resonance** with our audience, who felt the brand truly understood them.", hint: "When a brand's message truly connects with its audience." },
+                { question: "Your new ad campaign is designed to make customers feel something—joy, nostalgia, or excitement—to build a lasting bond with the brand. What is this goal called?", answer: "Emotional connection", sentence: "Our ad campaign aims to create an **emotional connection** with parents by showing heartfelt family moments.", hint: "Building a relationship with customers through feelings." },
+                { question: "After a product recall, your company is being transparent and communicating honestly with customers to regain their belief in your brand. What are you trying to rebuild?", answer: "Brand trust", sentence: "We are rebuilding **brand trust** after the data breach by being completely transparent about our new security measures.", hint: "Rebuilding a customer's belief in your brand." },
+                { question: "Your team is outlining the complete structure and flow of a campaign's narrative, from the beginning to the end, ensuring it is a compelling story. What is this process called?", answer: "Narrative architecture", sentence: "Our campaign's **narrative architecture** is a three-act story: the problem, the discovery of our product, and the joyful resolution.", hint: "Designing the structure of a story." },
+                { question: "Instead of just telling a story to an audience, your new campaign encourages them to participate and contribute to the story themselves, for example, by sharing their own experiences with the product. What is this participatory approach to storytelling called?", answer: "Storyliving", sentence: "Instead of just telling a story, our new campaign promotes **storyliving** by encouraging our customers to submit their own stories of using our product.", hint: "Involving the audience in the story." },
+                { question: "Your company's design team has created a visually stunning and impactful ad that stands out from the competition. You praise their work using a two-word term. What is it?", answer: "Creative excellence", sentence: "The design team's work on this project is a true example of **creative excellence**—the ad is beautiful, impactful, and perfectly on-brand.", hint: "High-quality and effective creative work." },
+                { question: "Your new campaign involves setting up a themed pop-up store where customers can interact with the brand in a unique, memorable way. What is this type of marketing called?", answer: "Experiential marketing", sentence: "We're using **experiential marketing** by setting up a pop-up store where people can try our products in an immersive, themed environment.", hint: "Marketing that creates memorable experiences." },
+                { question: "For social media, you're creating a series of very short, impactful video ads that can be consumed in just a few seconds as people scroll through their feeds. What is this type of marketing called?", answer: "Micro-moment marketing", sentence: "We've created a series of **micro-moment marketing** videos, each one a few seconds long, to grab attention on social media feeds.", hint: "Quick, impactful ads for short attention spans." },
+                { question: "Your social media strategy is focused on creating short, easy-to-digest content like infographics and quick videos that are simple to share. What is this type of content called?", answer: "Snackable content", sentence: "Our new social media strategy is all about **snackable content**—short videos and infographics that are easy to consume and share.", hint: "Content that's quick and easy to consume." },
+                { question: "You are designing a new website with a focus on making it easy and intuitive for users. You start by identifying the users' needs and pain points and design the site around them. What is this design philosophy called?", answer: "Human-centered design", sentence: "The new app was created with **human-centered design**, putting user needs and behaviors at the core of every design decision.", hint: "Designing with the end-user in mind." },
+                { question: "Instead of starting with what the company wants to sell, your team first identifies the audience's problems and then develops solutions. What is this strategic approach called?", answer: "Audience-first approach", sentence: "Our **audience-first approach** means we don't start with a product to sell; we start with the audience's problem and then design the solution.", hint: "Focusing on the audience's problems first." },
+                { question: "Your brand is updating its logo, brand colors, and typography to create a more modern and cohesive look. What are you updating?", answer: "Visual identity", sentence: "We've completely updated our logo and brand colors to a more modern **visual identity**.", hint: "The look and feel of your brand." },
+                { question: "That short, catchy musical jingle at the end of your radio ad that customers can instantly recognize is part of what?", answer: "Sonic branding", sentence: "That five-note jingle at the end of our ads is our new **sonic branding**—it's how customers will recognize us even without seeing our logo.", hint: "Branding that uses sound." },
+                { question: "Your ad campaign's main message is centered on a social cause that your company believes in, such as environmentalism or charity. What is this kind of creative called?", answer: "Purpose-driven creative", sentence: "Our **purpose-driven creative** focuses on themes of community and giving back, which aligns with our company's mission.", hint: "Creative work with a social message." },
+                { question: "The design team is working in quick cycles, creating and testing new ad concepts every two weeks instead of waiting months for a final product. What is this development process called?", answer: "Agile creative development", sentence: "We're using **agile creative development** to quickly iterate on ad concepts and get a new one out every two weeks.", hint: "A quick, iterative process for creating ads." },
+                { question: "Your new campaign is not just a series of ads but a cohesive narrative about your brand's history and values. What is this process of sharing a brand's story called?", answer: "Brand storytelling", sentence: "The campaign's **brand storytelling** focuses on the brand's history, from its humble beginnings in a garage to becoming an industry leader.", hint: "Sharing the story of your brand." },
+                { question: "Your team is outlining the complete structure and flow of a campaign's narrative, from the beginning to the end, ensuring it is a compelling story. What is this process called?", answer: "Narrative architecture", sentence: "Our campaign's **narrative architecture** is a three-act story: the problem, the discovery of our product, and the joyful resolution.", hint: "The structure of a story." },
+                { question: "Your team is analyzing real-time data from a running campaign to make immediate changes to ad targeting and budget allocation to improve performance. What is this process called?", answer: "Campaign optimization", sentence: "After analyzing the data, our **campaign optimization** team will make changes to the ad targeting to improve performance.", hint: "Improving a campaign while it's running." }
+            ];
+
+            let quizQuestions = [];
+            let currentQuestionIndex = 0;
+
+            const welcomeScreenEl = document.getElementById('welcome-screen');
+            const startButton = document.getElementById('start-button');
+            const quizContainerEl = document.getElementById('quiz-container');
+            const completionMessageEl = document.getElementById('completion-message');
+            const restartButton = document.getElementById('restart-button');
+            
+            const progressIndicatorEl = document.getElementById('progress-indicator');
+            const questionTextEl = document.getElementById('question-text');
+            const userAnswerInput = document.getElementById('user-answer');
+            const feedbackMessageEl = document.getElementById('feedback-message');
+            const hintButton = document.getElementById('hint-button');
+            const hintContainerEl = document.getElementById('hint-container');
+            const hintTextEl = document.getElementById('hint-text');
+            const answerContainerEl = document.getElementById('answer-container');
+            const answerTextEl = document.getElementById('answer-text');
+            const sentenceContainerEl = document.getElementById('sentence-container');
+            const sentenceTextEl = document.getElementById('sentence-text');
+            const revealButton = document.getElementById('reveal-button');
+            const nextButton = document.getElementById('next-button');
+
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            function showElement(element) {
+                element.classList.remove('hidden');
+                element.classList.add('fade-in-up');
+            }
+
+            function hideElement(element) {
+                element.classList.add('hidden');
+                element.classList.remove('fade-in-up');
+            }
+
+            function loadQuestion() {
+                if (currentQuestionIndex < quizQuestions.length) {
+                    const data = quizQuestions[currentQuestionIndex];
+                    questionTextEl.innerHTML = `<span class="font-bold">Question:</span> ${data.question}`;
+                    userAnswerInput.value = '';
+                    feedbackMessageEl.textContent = '';
+                    hintTextEl.textContent = data.hint;
+                    answerTextEl.textContent = data.answer;
+                    sentenceTextEl.innerHTML = data.sentence;
+
+                    progressIndicatorEl.textContent = `Question ${currentQuestionIndex + 1} of ${quizQuestions.length}`;
+
+                    hideElement(answerContainerEl);
+                    hideElement(sentenceContainerEl);
+                    hideElement(hintContainerEl);
+
+                    revealButton.textContent = 'Check Answer';
+                    revealButton.classList.remove('hidden');
+                    nextButton.classList.add('hidden');
+                } else {
+                    hideElement(quizContainerEl);
+                    showElement(completionMessageEl);
+                }
+            }
+
+            function startQuiz() {
+                hideElement(welcomeScreenEl);
+                hideElement(completionMessageEl);
+                showElement(quizContainerEl);
+                quizQuestions = shuffleArray([...quizData]);
+                currentQuestionIndex = 0;
+                loadQuestion();
+            }
+
+            startButton.addEventListener('click', startQuiz);
+            restartButton.addEventListener('click', startQuiz);
+
+            hintButton.addEventListener('click', () => {
+                hintContainerEl.classList.toggle('hidden');
+            });
+
+            revealButton.addEventListener('click', () => {
+                const userAnswer = userAnswerInput.value.trim().toLowerCase();
+                const correctAnswer = quizQuestions[currentQuestionIndex].answer.toLowerCase();
+                
+                if (userAnswer === correctAnswer) {
+                    feedbackMessageEl.textContent = "Correct! Great job!";
+                    feedbackMessageEl.classList.remove('text-red-500');
+                    feedbackMessageEl.classList.add('text-green-600');
+                } else {
+                    feedbackMessageEl.textContent = "That's not quite right. Keep trying!";
+                    feedbackMessageEl.classList.remove('text-green-600');
+                    feedbackMessageEl.classList.add('text-red-500');
+                }
+
+                showElement(answerContainerEl);
+                showElement(sentenceContainerEl);
+                revealButton.classList.add('hidden');
+                nextButton.classList.remove('hidden');
+            });
+
+            nextButton.addEventListener('click', () => {
+                currentQuestionIndex++;
+                loadQuestion();
+            });
+        });
+    </script>
+
+</body>
+</html>
